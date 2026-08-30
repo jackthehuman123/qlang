@@ -25,6 +25,8 @@ endif()
 #     Every new .cpp in src/ goes in this list. ---
 add_library(qlang_core
     src/lexer.cpp
+    src/parser.cpp
+    src/ast_print.cpp
 )
 # lexer.cpp         source file      text you wrote
 #     ↓ g++ 
@@ -76,7 +78,10 @@ FetchContent_MakeAvailable(Catch2)  # clone and configure
 
 enable_testing()    # Turn on CTest, CMake's test runner
 
-add_executable(tests tests/test_lexer.cpp)
+add_executable(tests 
+#tests/test_lexer.cpp 
+tests/test_parser.cpp
+)
 
 target_link_libraries(tests PRIVATE 
     qlang_core              # These are 2 separate libraries
