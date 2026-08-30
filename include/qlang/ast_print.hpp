@@ -1,3 +1,5 @@
+#pragma  once
+
 #include "qlang/ast.hpp"
 #include <cerrno>
 
