@@ -9,6 +9,7 @@
 namespace qlang {
 
 namespace {
+    //* Converts TokenType to binding power
     int tok_type_to_bp(TokenType type) {
         switch (type) {
             case TokenType::Or: {return 1;}
@@ -19,10 +20,12 @@ namespace {
         return -1; //! Unknown token
     }
 
+    //* Check if valid Literal variant. Boolean values are treated as strings
     bool is_value(TokenType type) {
         return (type == TokenType::Number || type == TokenType::String || type == TokenType::Identifier);
     }
 
+    //* Converts TokenType to boolean values and validify
     std::optional<BoolOp> try_bool_op(TokenType type) {
         if (type == TokenType::And) {
             return BoolOp::And;
@@ -33,6 +36,7 @@ namespace {
         return std::nullopt;
     }
 
+    //* Converts TokenType to CmpOp
     std::optional<CmpOp> try_cmp_op(TokenType type) {
         switch (type) {
             case TokenType::Colon: {return CmpOp::Eq;}
@@ -57,8 +61,10 @@ namespace {
         return std::nullopt;
     }
 
+    //* Convert numerical string into double
     bool is_double(std::string_view num) {
         for (char c : num) {
+            //! Allows only one period
             if (c == '.') {
                 return true;
             }
@@ -66,6 +72,7 @@ namespace {
         return false;
     }
 
+    //* Convert token into literal
     Literal parse_literal(const Token& tok) {
         if (tok.type == TokenType::Number) {
             if (is_double(tok.text)) {
@@ -85,11 +92,13 @@ namespace {
         return std::string{tok.text};
     }
 }
-    
+
+//* Throws error and render error message
 [[noreturn]] void Parser::error(const std::string& msg, size_t pos) const { 
     throw ParseError{msg, pos};    
 }
 
+//* Return clear and readable error messages
 std::string format_error(const ParseError& e, std::string_view source) {
     //* search backwards for '\n', starting at e.pos, towards 0
     size_t nl = source.rfind('\n', e.pos);
@@ -112,12 +121,14 @@ std::string format_error(const ParseError& e, std::string_view source) {
     return out;
 }   
 
+//* Return true for matching next token
 bool Parser::expect(TokenType t) {
     if (peek().type != t) {return false;}
     advance();
     return true;
 }
 
+//* Token vector is converted into an AST and return a root node
 NodePtr Parser::parse() {
     auto expr = parse_expr(0);
     if (peek().type != TokenType::End) {
@@ -126,9 +137,9 @@ NodePtr Parser::parse() {
     return expr;
 }
 
-
+//* Pratt parsing using binding power for logical expressions
 NodePtr Parser::parse_expr(int min_bp) {
-    auto lhs = parse_primary();    
+    auto lhs = parse_primary(); //* Delegate call
     while(true) {
         int bp = tok_type_to_bp(peek().type);
         if (bp < min_bp) {break;}
@@ -149,6 +160,7 @@ NodePtr Parser::parse_expr(int min_bp) {
     return lhs;
 }
 
+//* Parse primary and not expression 
 NodePtr Parser::parse_primary() {
     if (peek().type == TokenType::Not) {
         advance();
