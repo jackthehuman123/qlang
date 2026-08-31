@@ -29,7 +29,8 @@ private:
     NodePtr parse_expr(int min_bp);
     NodePtr parse_primary();
     NodePtr parse_predicate();
-
+    
+    // helpers for Pratt parsing
     const Token& peek() const {return tokens_[i_];}
     const Token& advance()    {return tokens_[i_++];}
     bool expect(TokenType t);
