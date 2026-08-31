@@ -30,7 +30,7 @@ private:
     NodePtr parse_primary();
     NodePtr parse_predicate();
     
-    // helpers for Pratt parsing
+    //* helpers for Pratt parsing
     const Token& peek() const {return tokens_[i_];}
     const Token& advance()    {return tokens_[i_++];}
     bool expect(TokenType t);
@@ -41,8 +41,7 @@ private:
     size_t             i_ = 0;
 };
 
-//! Uses the thrown ParseError, so no access to the members needed 
-//! -> Free function
+//* Pinpointing error and position of the error being thrown
 std::string format_error(const ParseError& e, std::string_view source);
 
 } //* namespace qlang
