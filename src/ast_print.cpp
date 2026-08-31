@@ -1,3 +1,4 @@
+//? Build a string representation of the ast tree
 #include "qlang/ast_print.hpp"
 
 namespace qlang {
@@ -24,6 +25,7 @@ namespace {
     //* Back in C++17, we had to write overloaded<T1, T2, T3>, and since lambdas are anonymous function, we can't really do that, hence the template for deduction guide.
     template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
+    //* Converts Literal to std::string
     std::string lit_to_text(const Literal& lit) {
         return (std::visit(overloaded{
             [](int64_t n) { return std::to_string(n); },
@@ -33,6 +35,7 @@ namespace {
         }, lit));
     } 
 
+    //* Converts boolean to std::string
     std::string bool_to_text(const qlang::BoolOp& b) {
         switch(b) {
             case BoolOp::And: {return std::string{"AND"};}
@@ -42,7 +45,7 @@ namespace {
     }
 }
 
-//! dereferencing a unique_ptr returns a reference to the object being pointed at 
+//! Return a post-order representation based on derived class
 std::string print(const Node& node) {
     if (auto* pred = dynamic_cast<const Predicate*>(&node)) {
         return (pred->field + op_to_text(pred->op) + lit_to_text(pred->value));
@@ -57,4 +60,4 @@ std::string print(const Node& node) {
     throw std::logic_error{"print: unknown node type"};
 }
 
-}
+} //* namespace qlang
