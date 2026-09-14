@@ -47,14 +47,15 @@ std::string print(const Node& node) {
     if (auto* pred = dynamic_cast<const Predicate*>(&node)) {
         return (pred->field + op_to_text(pred->op) + lit_to_text(pred->value));
     } 
-    else if (auto* bi_ex = dynamic_cast<const BinaryExpr*>(&node)) {
+    if (auto* bi_ex = dynamic_cast<const BinaryExpr*>(&node)) {
         return (
             "(" + bool_to_text(bi_ex->op) + " " + print(*bi_ex->lhs) + " " + print(*bi_ex->rhs) + ")"
         );
-    } else if (auto* not_ex = dynamic_cast<const NotExpr*>(&node)) {
+    }
+    if (auto* not_ex = dynamic_cast<const NotExpr*>(&node)) {
         return (std::string{"NOT "} + print(*not_ex->operand));
     }
     throw std::logic_error{"print: unknown node type"};
 }
 
-}
+} // namespace qlang
