@@ -1,6 +1,6 @@
 ---
-name: explain-file
-description: Use when Catlyn types /explain-file with a source file path and wants a short explanation of what the file does and how it connects to the rest of the codebase.
+name: explaining-file
+description: Use when user types /explaining-file with a source file path and wants a short explanation of what the file does and how it connects to the rest of the codebase.
 disable-model-invocation: true
 argument-hint: "<path to file>"
 context: fork
