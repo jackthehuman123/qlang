@@ -3,3 +3,5 @@ build-rel/
 compile_commands.json
 .cache/
 .DS_Store
+CLAUDE.local.md
+.claude/settings.local.json
